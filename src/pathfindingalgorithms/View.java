@@ -5,12 +5,16 @@
  */
 package pathfindingalgorithms;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,7 +22,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JPanel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
@@ -30,21 +38,24 @@ public class View extends javax.swing.JPanel implements Observer {
     private int resX = 1280;
     private int resY = 720;
     private int rows,cols;
-    public int startRow = -1,startColumn;
-    public int goalRow,goalColumn;
+    public int startRow = -1,startColumn,goalRow,goalColumn;
     private Controller controlador;
     public Component[][] cells;
     public Color colorActual = Color.BLACK;
     private Color colorBase;
-    public View(int rows, int cols){
+    private Dimension d;
+    private GridBagConstraints gbc ;
+    public View(int rows, int cols, Dimension d){
         initComponents();
-        controlador = Controller.getInstance(this);
-        cells = new Component [rows][cols];        
+        this.d = d;
+        this.controlador = Controller.getInstance(this);
+        this.cells = new Component [rows][cols];        
         this.rows = rows;
         this.cols = cols;
-        setLayout(new GridBagLayout());
-
-        GridBagConstraints gbc = new GridBagConstraints();
+        setLayout(new GridLayout());
+        gridPanel.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+       
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 gbc.gridx = col;
@@ -67,7 +78,8 @@ public class View extends javax.swing.JPanel implements Observer {
                     }
                 }
                 cellPane.setBorder(border);
-                add(cellPane, gbc);
+                
+                gridPanel.add(cellPane, gbc);
                 cells[row][col] = cellPane;
             }
             
@@ -97,6 +109,60 @@ public class View extends javax.swing.JPanel implements Observer {
         }
         
     }
+    
+    public void update(Dimension d){
+       this.d = d;
+       gridPanel.setSize(d);
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                
+                cells[row][col].setSize(cells[row][col].getPreferredSize());
+                cells[row][col].repaint();
+                cells[row][col].revalidate();
+            }
+            
+        }
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+    
+    public void update(int rows, int cols){
+        this.resetTotal();
+        this.rows = rows;
+        this.cols = cols;
+        cells = new Component [rows][cols];    
+        gridPanel.removeAll();
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                gbc.gridx = col;
+                gbc.gridy = row;
+
+                CellPane cellPane = new CellPane();
+                cellPane.setName(row+","+col);
+                Border border = null;
+                if (row < 4) {
+                    if (col < 4) {
+                        border = new MatteBorder(1, 1, 0, 0, Color.GRAY);
+                    } else {
+                        border = new MatteBorder(1, 1, 0, 1, Color.GRAY);
+                    }
+                } else {
+                    if (col < 4) {
+                        border = new MatteBorder(1, 1, 1, 0, Color.GRAY);
+                    } else {
+                        border = new MatteBorder(1, 1, 1, 1, Color.GRAY);
+                    }
+                }
+                cellPane.setBorder(border);
+                cellPane.setSize(cellPane.getPreferredSize());
+                gridPanel.add(cellPane, gbc);
+                cells[row][col] = cellPane;
+            }
+            
+        }
+        
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+    
     public void reset(){
         if(this.startRow != -1){
             cells[this.startRow][this.startColumn].setBackground(Color.GREEN);
@@ -194,7 +260,7 @@ public class View extends javax.swing.JPanel implements Observer {
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(35, 35);
+            return new Dimension((d.height-20)/rows, (d.height-20)/rows);
         }
     }
     
@@ -207,20 +273,40 @@ public class View extends javax.swing.JPanel implements Observer {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        gridPanel = new javax.swing.JPanel();
+
+        setPreferredSize(new java.awt.Dimension(700, 700));
+
+        gridPanel.setAlignmentX(0.0F);
+        gridPanel.setAlignmentY(0.0F);
+        gridPanel.setPreferredSize(new java.awt.Dimension(700, 700));
+
+        javax.swing.GroupLayout gridPanelLayout = new javax.swing.GroupLayout(gridPanel);
+        gridPanel.setLayout(gridPanelLayout);
+        gridPanelLayout.setHorizontalGroup(
+            gridPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 700, Short.MAX_VALUE)
+        );
+        gridPanelLayout.setVerticalGroup(
+            gridPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 700, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1064, Short.MAX_VALUE)
+            .addComponent(gridPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 566, Short.MAX_VALUE)
+            .addComponent(gridPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel gridPanel;
     // End of variables declaration//GEN-END:variables
 }
 

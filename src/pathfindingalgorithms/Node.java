@@ -19,6 +19,7 @@ public class Node {
     private float distance;
     private Node father;
     private float g = 0,f = 0;
+    
     public Node(int value, int row, int col){
         this.value = value;
         this.row = row;

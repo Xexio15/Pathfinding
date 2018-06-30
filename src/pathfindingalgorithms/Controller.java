@@ -92,7 +92,7 @@ public class Controller {
     
     public void mapGenerator(Component[][] cells, boolean diagonals){
         graph = new Graph();
-        int[] fila = new int[25];
+        int[] fila = new int[cells.length];
         for (int row = 0; row < cells.length; row++) {
             for (int col = 0; col < cells[0].length; col++) {
                 if(cells[row][col].getBackground().equals(Color.BLACK)){
@@ -114,29 +114,37 @@ public class Controller {
     public void setDelay(int delay){
         al.setDelay(delay);
         al.setOperations(0);
+        al.resetPathLength();
     }
     
-    public int useBFS(int row, int col){
+    public int[] useBFS(int row, int col){
+        int [] length_ops = new int[2];
         Node start = graph.getNode(row, col);
         try {
             al.BFS(start);
         } catch (InterruptedException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return al.getOperations();
+        length_ops[0] = al.getPathLength();
+        length_ops[1] = al.getOperations();
+        return length_ops;
     }
 
-    public int useDFS(int row, int col){
+    public int[] useDFS(int row, int col){
+        int [] length_ops = new int[2];
         Node start = graph.getNode(row, col);
         try {
             al.DFS(start);
         } catch (InterruptedException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return al.getOperations();
+        length_ops[0] = al.getPathLength();
+        length_ops[1] = al.getOperations();
+        return length_ops;
     }
     
-    public int useAStar(int sRow, int sCol, int gRow, int gCol, int heuristic){
+    public int[] useAStar(int sRow, int sCol, int gRow, int gCol, int heuristic){
+        int [] length_ops = new int[2];
         Node start = graph.getNode(sRow, sCol);
         Node goal = graph.getNode(gRow, gCol);
         try {
@@ -144,10 +152,13 @@ public class Controller {
         } catch (InterruptedException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return al.getOperations();
+        length_ops[0] = al.getPathLength();
+        length_ops[1] = al.getOperations();
+        return length_ops;
     }
     
-    public int useGreedy(int sRow, int sCol, int gRow, int gCol, int heuristic){
+    public int[] useGreedy(int sRow, int sCol, int gRow, int gCol, int heuristic){
+        int [] length_ops = new int[2];
         Node start = graph.getNode(sRow, sCol);
         Node goal = graph.getNode(gRow, gCol);
         try {
@@ -155,17 +166,22 @@ public class Controller {
         } catch (InterruptedException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return al.getOperations();
+        length_ops[0] = al.getPathLength();
+        length_ops[1] = al.getOperations();
+        return length_ops;
     }
     
-    public int useDijkstra(int sRow, int sCol){
+    public int[] useDijkstra(int sRow, int sCol){
+        int [] length_ops = new int[2];
         Node start = graph.getNode(sRow, sCol);
         try {
             al.Dijkstra(graph,start);
         } catch (InterruptedException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return al.getOperations();
+        length_ops[0] = al.getPathLength();
+        length_ops[1] = al.getOperations();
+        return length_ops;
     }
     
 }
