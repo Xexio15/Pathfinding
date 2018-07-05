@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.Enumeration;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 
 /**
@@ -595,7 +596,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_formComponentResized
 
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
-        v.update(Integer.parseInt(this.rowsText.getText()),Integer.parseInt(this.colsText.getText()));
+        
+        if(Integer.parseInt(this.rowsText.getText()) * Integer.parseInt(this.colsText.getText()) > 150*150){
+        
+            JOptionPane.showMessageDialog(this,
+                "That is too big for me, sorry :(",
+                "Warning",
+                JOptionPane.WARNING_MESSAGE);
+        }else{
+            v.update(Integer.parseInt(this.rowsText.getText()),Integer.parseInt(this.colsText.getText()));
+        }
     }//GEN-LAST:event_applyButtonActionPerformed
 
 

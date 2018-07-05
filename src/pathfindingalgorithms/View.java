@@ -260,7 +260,11 @@ public class View extends javax.swing.JPanel implements Observer {
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension((d.height-20)/rows, (d.height-20)/rows);
+            if(((d.width-20)/cols) >= ((d.height-20)/rows)){
+                return new Dimension((d.height-20)/rows, (d.height-20)/rows);
+            }else{
+                return new Dimension((d.width-20)/cols, (d.width-20)/cols);
+            }
         }
     }
     
