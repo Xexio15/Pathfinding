@@ -92,7 +92,7 @@ public class Controller {
     
     public void mapGenerator(Component[][] cells, boolean diagonals){
         graph = new Graph();
-        int[] fila = new int[cells.length];
+        int[] fila = new int[cells[0].length];
         for (int row = 0; row < cells.length; row++) {
             for (int col = 0; col < cells[0].length; col++) {
                 if(cells[row][col].getBackground().equals(Color.BLACK)){
